@@ -96,4 +96,4 @@ python honesty_scan.py ./docs --registry number_registry.json
 | ③推翻不删除 | `EXEMPT_MARKERS` 豁免作废行 |
 | ④数字先登记 | `--registry` 加载后，裸数字未登记即报错 |
 
-已测试：Windows GBK 控制台强制 UTF-8 输出，bad.md 命中 2 处（approximately + TODO），clean.md 全绿，rc 0/1 正确。
+已测试：Windows GBK 控制台强制 UTF-8 输出，bad.md 命中 2 处（`approximately` + `TODO`），clean.md 全绿，rc 0/1 正确。
