@@ -87,6 +87,12 @@
 
 ```bash
 python honesty_scan.py ./docs --registry number_registry.json
+
+# 更多用法
+python honesty_scan.py ./docs --config rules.json      # 外部规则配置（覆盖/追加词表）
+python honesty_scan.py ./docs --json                   # JSON 输出（供面板/脚本消费）
+python honesty_scan.py . --init ci                     # 生成 GitHub Actions 门禁模板
+python honesty_scan.py . --init precommit              # 生成 pre-commit 钩子配置
 ```
 
 | 规则 | 实现位置 |
