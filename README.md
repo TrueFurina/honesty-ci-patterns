@@ -78,3 +78,22 @@
 ---
 
 *来源：`TrueFurina/marl-ecdsa`，逐行读源码研究（`scripts/pre-commit/honesty_scan.py`、`caliber_check.py`、`.github/workflows/ci.yml`、`number_registry.json` 189 条目）。所有结论来自读源码 + 实测统计 JSON，非转述。*
+
+---
+
+## 可运行示例
+
+四巧思的骨架实现：[](honesty_scan.py)
+
+```bash
+python honesty_scan.py ./docs --registry number_registry.json
+```
+
+| 规则 | 实现位置 |
+|---|---|
+| ①只拦已知回潮 | `FORBIDDEN_PHRASES` 拒绝列表 |
+| ②提及≠使用 | `_QUOTE_RE` 先剥引用再匹配 |
+| ③推翻不删除 | `EXEMPT_MARKERS` 豁免作废行 |
+| ④数字先登记 | `--registry` 加载后，裸数字未登记即报错 |
+
+已测试：Windows GBK 控制台强制 UTF-8 输出，bad.md 命中 2 处（approximately + TODO），clean.md 全绿，rc 0/1 正确。
