@@ -1,0 +1,45 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "honesty-scan"
+version = "1.1.0"
+description = "把「诚实」做成能 exit 1 的 CI 门禁：静态拒绝列表 + 登记簿 + 提及≠使用豁免"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "TrueFurina" }]
+keywords = [
+    "ci", "honesty", "integrity", "gate", "static-analysis",
+    "documentation", "research", "methodology", "llm-safety",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Text Processing :: Markup",
+]
+
+[project.urls]
+Homepage = "https://github.com/TrueFurina/honesty-ci-patterns"
+Repository = "https://github.com/TrueFurina/honesty-ci-patterns"
+Issues = "https://github.com/TrueFurina/honesty-ci-patterns/issues"
+
+[project.scripts]
+honesty-scan = "honesty_scan:main"
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "unittest"]
+
+[tool.setuptools]
+py-modules = ["honesty_scan"]
+license-files = ["LICENSE"]
