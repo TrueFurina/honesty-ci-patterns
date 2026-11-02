@@ -77,21 +77,36 @@ def load_registered_numbers(registry_path):
                 nums.add(m)
 
     walk(data)
-    return nums
+    # 归一化：登记簿里的 1.95 与文档里的 1.95% 视为同一数字（去尾 % 后比对）
+    return {n.rstrip("%") for n in nums}
 
 
 def scan_text(text, registered):
     """返回违规列表 [(规则, 行号, 片段)]。"""
     violations = []
-    stripped = _QUOTE_RE.sub("", text)  # 规则 2：先剥引用，避免误伤"说明性引用"
+
+    # 规则 2 关键：fenced code block 跨多行，逐行剥引用无法覆盖块内内容。
+    # 先预计算哪些行落在 ``` fence 内（或行内被剥空），这些行对规则 1/4 豁免。
+    in_fence = set()
+    fence_open = False
+    for lineno, raw_line in enumerate(text.splitlines(), 1):
+        stripped = raw_line.strip()
+        if stripped.startswith("```"):
+            in_fence.add(lineno)
+            fence_open = not fence_open
+            continue
+        if fence_open:
+            in_fence.add(lineno)
 
     for lineno, raw_line in enumerate(text.splitlines(), 1):
         # 规则 3：命中作废标记的行豁免
         if _EXEMPT_RE.search(raw_line):
             continue
-        # 只在"未被剥引用"的对应区域判定；简化：对剥引用后的整文做逐行重算行号不现实，
-        # 实践中按行判断该行是否处于被剥区域外。这里用保守做法：对每行单独剥引用后判定。
+        # 规则 2：落在 fenced code block 内的行豁免（提及≠使用）
         line_clean = _QUOTE_RE.sub("", raw_line)
+        if lineno in in_fence or line_clean.strip() == "":
+            continue
+
         for pat in FORBIDDEN_PHRASES:
             if re.search(pat, line_clean, re.IGNORECASE):
                 violations.append(("FORBIDDEN", lineno, raw_line.strip()[:60]))
@@ -99,8 +114,8 @@ def scan_text(text, registered):
         # 规则 4：裸数字必须在登记簿（仅当提供了登记簿）
         if registered is not None:
             for m in re.findall(r"\d+(?:\.\d+)?%?", line_clean):
-                # 形如数字且不在引用里的，要求已登记
-                if m not in registered:
+                # 去尾 % 后比对：登记簿 1.95 与文档 1.95% 视为同一数字
+                if m.rstrip("%") not in registered:
                     violations.append(("UNREGISTERED", lineno, f"{m} in {raw_line.strip()[:40]}"))
 
     return violations
