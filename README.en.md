@@ -23,8 +23,8 @@ and nobody notices for months.
 Abandon semantic understanding of the content. Instead, maintain an explicit
 deny-list (`FORBIDDEN_PHRASES`) of known bad patterns:
 
-- "approximately", "roughly", "estimated"
-- "comparable to X" (without a footnote source)
+- `approximately`, `roughly`, `estimated`
+- `comparable to X` (without a footnote source)
 - Placeholder values like `TODO`, `XX%`, `??`
 
 The scanner exits with code 1 if any phrase matches. This is a **blocklist**,
